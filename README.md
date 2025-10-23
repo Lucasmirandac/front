@@ -1,59 +1,113 @@
-# PersonalFinance
+# Frontend - Controle de Gastos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.7.
+Este é o frontend da aplicação de controle de gastos desenvolvido com Angular 18 e Angular Material.
 
-## Development server
+## Funcionalidades
 
-To start a local development server, run:
+- **Autenticação**: Sistema de login e cadastro de usuários
+- **Dashboard**: Visão geral das finanças com resumo de receitas, despesas e saldo
+- **Transações**: Cadastro e gerenciamento de receitas e despesas
+- **Relatórios**: Gráficos interativos usando ECharts para análise financeira
+- **Categorias**: Sistema de categorização automática para transações
 
-```bash
-ng serve
+## Tecnologias Utilizadas
+
+- Angular 18 (Standalone Components)
+- Angular Material
+- ECharts (ngx-echarts)
+- TypeScript
+- RxJS
+
+## Como Executar
+
+1. Certifique-se de que a API está rodando na porta 3000
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Execute o projeto:
+
+   ```bash
+   npm start
+   ```
+
+4. Acesse `http://localhost:4200`
+
+## Estrutura do Projeto
+
+```
+src/app/
+├── components/
+│   ├── auth/
+│   │   ├── login.component.ts
+│   │   └── register.component.ts
+│   ├── dashboard/
+│   │   ├── dashboard.component.ts
+│   │   └── dashboard-home.component.ts
+│   ├── transactions/
+│   │   └── transactions.component.ts
+│   └── reports/
+│       └── reports.component.ts
+├── models/
+│   ├── user.model.ts
+│   ├── transaction.model.ts
+│   └── category.model.ts
+├── services/
+│   ├── auth.service.ts
+│   ├── user.service.ts
+│   ├── transaction.service.ts
+│   ├── category.service.ts
+│   └── data-initialization.service.ts
+├── guards/
+│   └── auth.guard.ts
+└── app.routes.ts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Funcionalidades Detalhadas
 
-## Code scaffolding
+### Autenticação
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Login com email e senha
+- Cadastro de novos usuários
+- Proteção de rotas com AuthGuard
+- Persistência de sessão no localStorage
 
-```bash
-ng generate component component-name
-```
+### Dashboard
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Resumo financeiro em tempo real
+- Cards com receitas, despesas e saldo
+- Ações rápidas para navegação
 
-```bash
-ng generate --help
-```
+### Transações
 
-## Building
+- Cadastro de receitas e despesas
+- Seleção de categoria
+- Listagem com filtros
+- Edição e exclusão de transações
 
-To build the project run:
+### Relatórios
 
-```bash
-ng build
-```
+- Gráfico de pizza: Gastos por categoria
+- Gráfico de barras: Receitas vs Despesas
+- Gráfico de linha: Evolução mensal
+- Cards de resumo financeiro
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## API Endpoints Utilizados
 
-## Running unit tests
+- `GET/POST /users` - Gerenciamento de usuários
+- `GET/POST /categories` - Gerenciamento de categorias
+- `GET/POST/PATCH/DELETE /transactions` - Gerenciamento de transações
+- `GET /transactions/summary/:userId` - Resumo financeiro
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+## Configuração
 
-```bash
-ng test
-```
+A aplicação está configurada para se comunicar com a API em `http://localhost:3000`. Para alterar a URL da API, modifique a propriedade `apiUrl` nos serviços.
 
-## Running end-to-end tests
+## Dados Padrão
 
-For end-to-end (e2e) testing, run:
+Ao fazer login pela primeira vez, o sistema automaticamente cria categorias padrão:
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Alimentação, Transporte, Moradia, Saúde, Educação, Lazer, Roupas
+- Salário, Freelance, Investimentos

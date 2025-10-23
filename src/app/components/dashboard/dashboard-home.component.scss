@@ -1,0 +1,73 @@
+.dashboard-container {
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.summary-card {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.card-content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.card-icon {
+  font-size: 48px;
+  margin-right: 20px;
+}
+
+.card-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.card-info .amount {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.income-card {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+}
+
+.expense-card {
+  background: linear-gradient(135deg, #f44336, #ef5350);
+  color: white;
+}
+
+.balance-card.positive {
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
+  color: white;
+}
+
+.balance-card.negative {
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
+  color: white;
+}
+
+.actions-section {
+  margin-top: 30px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

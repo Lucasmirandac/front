@@ -1,0 +1,71 @@
+<div class="reports-container">
+  <h1>Relatórios</h1>
+
+  <mat-tab-group>
+    <mat-tab label="Resumo por Categoria">
+      <div class="chart-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Gastos por Categoria</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div echarts [options]="categoryChartOptions" [initOpts]="initOpts" class="chart"></div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Receitas vs Despesas">
+      <div class="chart-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Receitas vs Despesas</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div
+              echarts
+              [options]="incomeExpenseChartOptions"
+              [initOpts]="initOpts"
+              class="chart"
+            ></div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Evolução Mensal">
+      <div class="chart-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Evolução Mensal</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div echarts [options]="monthlyChartOptions" [initOpts]="initOpts" class="chart"></div>
+          </mat-card-content>
+        </mat-card>
+        <mat-card>
+          <mat-card-content>
+            <div class="summary-cards">
+              <div class="summary-card income">
+                <h3>Total de Receitas</h3>
+                <p>{{ formatCurrency(totalIncome) }}</p>
+              </div>
+              <div class="summary-card expense">
+                <h3>Total de Despesas</h3>
+                <p>{{ formatCurrency(totalExpense) }}</p>
+              </div>
+              <div
+                class="summary-card balance"
+                [class.positive]="balance >= 0"
+                [class.negative]="balance < 0"
+              >
+                <h3>Saldo</h3>
+                <p>{{ formatCurrency(balance) }}</p>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

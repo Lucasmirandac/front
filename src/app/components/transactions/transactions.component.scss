@@ -1,0 +1,48 @@
+.transactions-container {
+  padding: 20px;
+}
+
+h1 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-container {
+  margin-top: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.submit-button {
+  margin-top: 20px;
+}
+
+.table-container {
+  margin-top: 20px;
+}
+
+.transactions-table {
+  width: 100%;
+}
+
+.income {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.expense {
+  color: #f44336;
+  font-weight: bold;
+}
+
+mat-chip {
+  font-size: 12px;
+}

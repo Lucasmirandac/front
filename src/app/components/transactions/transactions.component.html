@@ -1,0 +1,147 @@
+<div class="transactions-container">
+  <h1>Transações</h1>
+
+  <mat-tab-group>
+    <mat-tab label="Nova Transação">
+      <div class="form-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Adicionar Transação</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Título</mat-label>
+                  <input matInput formControlName="title" required />
+                  <mat-error *ngIf="transactionForm.get('title')?.hasError('required')">
+                    Título é obrigatório
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Tipo</mat-label>
+                  <mat-select formControlName="type" required>
+                    <mat-option value="income">Receita</mat-option>
+                    <mat-option value="expense">Despesa</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="transactionForm.get('type')?.hasError('required')">
+                    Tipo é obrigatório
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Categoria</mat-label>
+                  <mat-select formControlName="categoryId" required>
+                    <mat-option *ngFor="let category of categories" [value]="category.id">
+                      {{ category.name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="transactionForm.get('categoryId')?.hasError('required')">
+                    Categoria é obrigatória
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Valor (R$)</mat-label>
+                  <input matInput type="number" formControlName="amount" required />
+                  <mat-error *ngIf="transactionForm.get('amount')?.hasError('required')">
+                    Valor é obrigatório
+                  </mat-error>
+                  <mat-error *ngIf="transactionForm.get('amount')?.hasError('min')">
+                    Valor deve ser maior que zero
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Data</mat-label>
+                  <input matInput type="date" formControlName="date" required />
+                  <mat-error *ngIf="transactionForm.get('date')?.hasError('required')">
+                    Data é obrigatória
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half-width">
+                  <mat-label>Descrição</mat-label>
+                  <input matInput formControlName="description" />
+                </mat-form-field>
+              </div>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="transactionForm.invalid || isLoading"
+                class="submit-button"
+              >
+                {{ isLoading ? 'Salvando...' : 'Salvar Transação' }}
+              </button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Lista de Transações">
+      <div class="table-container">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Transações</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="transactions" class="transactions-table">
+              <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef>Título</th>
+                <td mat-cell *matCellDef="let transaction">{{ transaction.title }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <mat-chip [color]="transaction.type === 'income' ? 'primary' : 'warn'">
+                    {{ transaction.type === 'income' ? 'Receita' : 'Despesa' }}
+                  </mat-chip>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>Valor</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span
+                    [class.income]="transaction.type === 'income'"
+                    [class.expense]="transaction.type === 'expense'"
+                  >
+                    {{ formatCurrency(transaction.amountInCents) }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef>Data</th>
+                <td mat-cell *matCellDef="let transaction">
+                  {{ formatDate(transaction.date) }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Ações</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <button mat-icon-button color="warn" (click)="deleteTransaction(transaction.id)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>
