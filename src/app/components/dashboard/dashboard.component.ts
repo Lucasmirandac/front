@@ -6,7 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { Router, RouterOutlet } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterOutlet, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { DataInitializationService } from '../../services/data-initialization.service';
 import { User } from '../../models/user.model';
@@ -22,7 +23,9 @@ import { User } from '../../models/user.model';
     MatCardModule,
     MatSidenavModule,
     MatListModule,
+    MatTooltipModule,
     RouterOutlet,
+    RouterModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
