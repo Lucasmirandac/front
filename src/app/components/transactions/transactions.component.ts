@@ -12,6 +12,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../services/auth.service';
 import { TransactionService } from '../../services/transaction.service';
 import { CategoryService } from '../../services/category.service';
@@ -22,6 +23,7 @@ import {
 } from '../../models/transaction.model';
 import { Category } from '../../models/category.model';
 import { User } from '../../models/user.model';
+import { NewCategoryDialogComponent } from './new-category-dialog.component';
 
 @Component({
   selector: 'app-transactions',
@@ -40,6 +42,7 @@ import { User } from '../../models/user.model';
     MatSnackBarModule,
     MatTabsModule,
     MatChipsModule,
+    MatTooltipModule,
   ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.scss',
@@ -57,6 +60,7 @@ export class TransactionsComponent implements OnInit {
     private transactionService: TransactionService,
     private categoryService: CategoryService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private cdr: ChangeDetectorRef
   ) {
     this.transactionForm = this.fb.group({
@@ -161,6 +165,22 @@ export class TransactionsComponent implements OnInit {
         },
       });
     }
+  }
+
+  openNewCategoryDialog(): void {
+    const dialogRef = this.dialog.open(NewCategoryDialogComponent, {
+      width: '400px',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((newCategory: Category) => {
+      if (newCategory) {
+        this.categories.push(newCategory);
+        this.transactionForm.patchValue({ categoryId: newCategory.id });
+        this.snackBar.open('Categoria criada com sucesso!', 'Fechar', { duration: 3000 });
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   formatCurrency(value: number): string {

@@ -1,6 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
 import { UserService } from './user.service';
 
@@ -11,7 +12,11 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private userService: UserService, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(
+    private userService: UserService,
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     // Verificar se há usuário salvo no localStorage apenas no navegador
     if (isPlatformBrowser(this.platformId)) {
       const savedUser = localStorage.getItem('currentUser');
@@ -23,20 +28,15 @@ export class AuthService {
 
   login(email: string, password: string): Observable<User> {
     return new Observable((observer) => {
-      this.userService.getAllUsers().subscribe({
-        next: (users) => {
-          const user = users.find((u) => u.email === email);
-          if (user) {
-            // Em uma implementação real, você verificaria a senha aqui
-            this.setCurrentUser(user);
-            observer.next(user);
-            observer.complete();
-          } else {
-            observer.error('Usuário não encontrado');
-          }
+      this.http.post<any>('http://localhost:3000/users/login', { email, password }).subscribe({
+        next: (response) => {
+          const user = response.data || response;
+          this.setCurrentUser(user);
+          observer.next(user);
+          observer.complete();
         },
         error: (error) => {
-          observer.error(error);
+          observer.error('Credenciais inválidas');
         },
       });
     });
