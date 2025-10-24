@@ -22,50 +22,109 @@ import { Category } from '../../models/category.model';
     MatIconModule,
   ],
   template: `
-    <h2 mat-dialog-title>Nova Categoria</h2>
+    <div class="dialog-container">
+      <h2 mat-dialog-title class="dialog-title">
+        <mat-icon>add_circle</mat-icon>
+        Nova Categoria
+      </h2>
 
-    <mat-dialog-content>
-      <form [formGroup]="categoryForm">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nome da Categoria</mat-label>
-          <input
-            matInput
-            formControlName="name"
-            placeholder="Ex: Alimentação, Transporte..."
-            required
-          />
-          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
-            Nome é obrigatório
-          </mat-error>
-        </mat-form-field>
-      </form>
-    </mat-dialog-content>
+      <mat-dialog-content class="dialog-content">
+        <p class="dialog-subtitle">Crie uma nova categoria para organizar suas transações</p>
+        <form [formGroup]="categoryForm" class="category-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nome da Categoria</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Ex: Alimentação, Transporte, Lazer..."
+              required
+            />
+            <mat-icon matSuffix>category</mat-icon>
+            <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
+              Nome é obrigatório
+            </mat-error>
+            <mat-error *ngIf="categoryForm.get('name')?.hasError('minlength')">
+              Nome deve ter pelo menos 2 caracteres
+            </mat-error>
+          </mat-form-field>
+        </form>
+      </mat-dialog-content>
 
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">Cancelar</button>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onSave()"
-        [disabled]="categoryForm.invalid || isLoading"
-      >
-        <mat-icon *ngIf="isLoading">refresh</mat-icon>
-        {{ isLoading ? 'Salvando...' : 'Salvar' }}
-      </button>
-    </mat-dialog-actions>
+      <mat-dialog-actions align="end" class="dialog-actions">
+        <button mat-button (click)="onCancel()" class="cancel-button">
+          <mat-icon>close</mat-icon>
+          Cancelar
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onSave()"
+          [disabled]="categoryForm.invalid || isLoading"
+          class="save-button"
+        >
+          <mat-icon *ngIf="isLoading">refresh</mat-icon>
+          <mat-icon *ngIf="!isLoading">check</mat-icon>
+          {{ isLoading ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </mat-dialog-actions>
+    </div>
   `,
   styles: [
     `
-      .full-width {
-        width: 100%;
+      .dialog-container {
+        padding: 0;
       }
 
-      mat-dialog-content {
-        padding: 20px 0;
+      .dialog-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #3f51b5;
+        margin: 0;
+
+        mat-icon {
+          font-size: 1.5rem;
+          width: 1.5rem;
+          height: 1.5rem;
+        }
       }
 
-      mat-dialog-actions {
-        padding: 20px 0 0 0;
+      .dialog-content {
+        padding: 24px 0;
+
+        .dialog-subtitle {
+          color: #757575;
+          font-size: 1rem;
+          margin: 0 0 24px 0;
+        }
+
+        .category-form {
+          .full-width {
+            width: 100%;
+          }
+        }
+      }
+
+      .dialog-actions {
+        padding: 16px 0 0 0;
+        gap: 12px;
+
+        .cancel-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #757575;
+        }
+
+        .save-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 24px;
+          font-weight: 600;
+        }
       }
     `,
   ],

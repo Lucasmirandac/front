@@ -183,6 +183,30 @@ export class TransactionsComponent implements OnInit {
     });
   }
 
+  setTransactionType(type: 'income' | 'expense'): void {
+    this.transactionForm.patchValue({ type });
+  }
+
+  getTotalIncome(): number {
+    return (
+      this.transactions
+        .filter((t) => t.type === 'income')
+        .reduce((sum, t) => sum + t.amountInCents, 0) / 100
+    );
+  }
+
+  getTotalExpense(): number {
+    return (
+      this.transactions
+        .filter((t) => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amountInCents, 0) / 100
+    );
+  }
+
+  getBalance(): number {
+    return this.getTotalIncome() - this.getTotalExpense();
+  }
+
   formatCurrency(value: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',

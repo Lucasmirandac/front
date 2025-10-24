@@ -7,34 +7,56 @@
     [mode]="'side'"
     [opened]="true"
   >
-    <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Dashboard</span>
+    <div class="sidenav-header">
+      <mat-icon class="logo-icon">account_balance_wallet</mat-icon>
+      <h2 class="app-title">Controle de Gastos</h2>
+    </div>
+
+    <mat-nav-list class="nav-list">
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <mat-icon matListItemIcon class="nav-icon">dashboard</mat-icon>
+        <span matListItemTitle class="nav-text">Dashboard</span>
       </a>
-      <a mat-list-item routerLink="/dashboard/transactions" routerLinkActive="active">
-        <mat-icon matListItemIcon>account_balance_wallet</mat-icon>
-        <span matListItemTitle>Transações</span>
+      <a
+        mat-list-item
+        routerLink="/dashboard/transactions"
+        routerLinkActive="active"
+        class="nav-item"
+      >
+        <mat-icon matListItemIcon class="nav-icon">account_balance_wallet</mat-icon>
+        <span matListItemTitle class="nav-text">Transações</span>
       </a>
-      <a mat-list-item routerLink="/dashboard/reports" routerLinkActive="active">
-        <mat-icon matListItemIcon>bar_chart</mat-icon>
-        <span matListItemTitle>Relatórios</span>
+      <a mat-list-item routerLink="/dashboard/reports" routerLinkActive="active" class="nav-item">
+        <mat-icon matListItemIcon class="nav-icon">bar_chart</mat-icon>
+        <span matListItemTitle class="nav-text">Relatórios</span>
       </a>
     </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <div class="user-info">
+        <mat-icon class="user-icon">person</mat-icon>
+        <div class="user-details">
+          <span class="user-name">{{ currentUser?.fullname || 'Usuário' }}</span>
+          <span class="user-email">{{ currentUser?.email }}</span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="logout()" matTooltip="Sair" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button mat-icon-button (click)="drawer.toggle()">
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button mat-icon-button (click)="drawer.toggle()" class="menu-toggle">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>Controle de Gastos</span>
+      <span class="toolbar-title">Controle de Gastos</span>
       <span class="spacer"></span>
-      <span class="user-info">{{ currentUser?.fullname || currentUser?.email }}</span>
-      <button mat-icon-button (click)="logout()" matTooltip="Sair">
-        <mat-icon>logout</mat-icon>
-      </button>
+      <div class="toolbar-user">
+        <mat-icon class="toolbar-user-icon">person</mat-icon>
+        <span class="toolbar-user-name">{{ currentUser?.fullname || currentUser?.email }}</span>
+      </div>
     </mat-toolbar>
 
     <div class="content">

@@ -1,29 +1,305 @@
+// Variáveis CSS para consistência
+:root {
+  --primary-color: #3f51b5;
+  --accent-color: #ff4081;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --error-color: #f44336;
+  --background-color: #f8f9fa;
+  --card-background: #ffffff;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --border-color: #e0e0e0;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --border-radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .sidenav-container {
   height: 100vh;
+  background: var(--background-color);
+}
+
+// Sidebar moderna
+.sidenav {
+  width: 280px;
+  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+  color: white;
+  box-shadow: var(--shadow-hover);
+
+  .sidenav-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.1);
+
+    .logo-icon {
+      font-size: 2.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      color: #ecf0f1;
+      margin-bottom: 12px;
+    }
+
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: #ecf0f1;
+    }
+  }
+
+  .nav-list {
+    padding: 16px 0;
+
+    .nav-item {
+      margin: 4px 16px;
+      border-radius: 8px;
+      transition: var(--transition);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(4px);
+      }
+
+      &.active {
+        background: rgba(52, 152, 219, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        border-left: 4px solid #3498db;
+
+        .nav-icon {
+          color: #3498db;
+        }
+
+        .nav-text {
+          color: #ecf0f1;
+          font-weight: 600;
+        }
+      }
+
+      .nav-icon {
+        color: rgba(236, 240, 241, 0.8);
+        margin-right: 16px;
+      }
+
+      .nav-text {
+        color: rgba(236, 240, 241, 0.9);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .sidenav-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+
+      .user-icon {
+        color: rgba(236, 240, 241, 0.8);
+        font-size: 1.5rem;
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          color: #ecf0f1;
+          font-weight: 600;
+          font-size: 0.9rem;
+        }
+
+        .user-email {
+          color: rgba(236, 240, 241, 0.7);
+          font-size: 0.8rem;
+        }
+      }
+    }
+
+    .logout-btn {
+      color: rgba(236, 240, 241, 0.8);
+
+      &:hover {
+        color: #e74c3c;
+        background: rgba(231, 76, 60, 0.1);
+      }
+    }
+  }
+}
+
+// Toolbar principal
+.main-toolbar {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 2;
+
+  .menu-toggle {
+    color: white;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .toolbar-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-left: 16px;
+    color: #ecf0f1;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .toolbar-user {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .toolbar-user-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      color: #ecf0f1;
+    }
+
+    .toolbar-user-name {
+      font-weight: 500;
+      color: #ecf0f1;
+    }
+  }
+}
+
+// Conteúdo principal
+.content {
+  padding: 0;
+  background: var(--background-color);
+  min-height: calc(100vh - 64px);
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .sidenav {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .main-toolbar {
+    .toolbar-title {
+      font-size: 1rem;
+    }
+
+    .toolbar-user {
+      .toolbar-user-name {
+        display: none;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .sidenav {
+    .sidenav-header {
+      padding: 16px;
+
+      .app-title {
+        font-size: 1.25rem;
+      }
+    }
+
+    .nav-list {
+      .nav-item {
+        margin: 2px 8px;
+      }
+    }
+  }
+
+  .main-toolbar {
+    .toolbar-title {
+      display: none;
+    }
+  }
+}
+
+// Animações
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sidenav {
-  width: 250px;
+  animation: slideInLeft 0.3s ease-out;
 }
 
-.spacer {
-  flex: 1 1 auto;
+.main-toolbar {
+  animation: fadeIn 0.5s ease-out;
 }
 
-.user-info {
-  margin-right: 16px;
-  font-size: 14px;
+// Estados de hover melhorados
+.nav-item {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
 }
 
-.content {
-  padding: 20px;
+// Scrollbar personalizada
+.sidenav::-webkit-scrollbar {
+  width: 6px;
 }
 
-.active {
-  background-color: rgba(0, 0, 0, 0.04);
+.sidenav::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-mat-nav-list a {
-  text-decoration: none;
-  color: inherit;
+.sidenav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.sidenav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }

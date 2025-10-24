@@ -1,155 +1,266 @@
 <div class="transactions-container">
-  <h1>Transações</h1>
+  <!-- Header com título e estatísticas rápidas -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1>💰 Controle de Gastos</h1>
+      <p class="subtitle">Gerencie suas finanças de forma simples e eficiente</p>
+    </div>
+    <div class="quick-stats" *ngIf="transactions.length > 0">
+      <div class="stat-card income">
+        <mat-icon>trending_up</mat-icon>
+        <div class="stat-content">
+          <span class="stat-label">Receitas</span>
+          <span class="stat-value">{{ getTotalIncome() | currency : 'BRL' }}</span>
+        </div>
+      </div>
+      <div class="stat-card expense">
+        <mat-icon>trending_down</mat-icon>
+        <div class="stat-content">
+          <span class="stat-label">Despesas</span>
+          <span class="stat-value">{{ getTotalExpense() | currency : 'BRL' }}</span>
+        </div>
+      </div>
+      <div
+        class="stat-card balance"
+        [class.positive]="getBalance() >= 0"
+        [class.negative]="getBalance() < 0"
+      >
+        <mat-icon>{{ getBalance() >= 0 ? 'account_balance' : 'warning' }}</mat-icon>
+        <div class="stat-content">
+          <span class="stat-label">Saldo</span>
+          <span class="stat-value">{{ getBalance() | currency : 'BRL' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <mat-tab-group>
-    <mat-tab label="Nova Transação">
+  <mat-tab-group class="modern-tabs">
+    <mat-tab label="➕ Nova Transação">
       <div class="form-container">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Adicionar Transação</mat-card-title>
+        <mat-card class="modern-card">
+          <mat-card-header class="card-header">
+            <mat-card-title class="card-title">
+              <mat-icon>add_circle</mat-icon>
+              Adicionar Transação
+            </mat-card-title>
+            <mat-card-subtitle>Preencha os dados da sua transação</mat-card-subtitle>
           </mat-card-header>
-          <mat-card-content>
-            <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Título</mat-label>
-                  <input matInput formControlName="title" required />
-                  <mat-error *ngIf="transactionForm.get('title')?.hasError('required')">
-                    Título é obrigatório
-                  </mat-error>
-                </mat-form-field>
+          <mat-card-content class="card-content">
+            <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()" class="modern-form">
+              <!-- Tipo de Transação com Visual Melhorado -->
+              <div class="form-section">
+                <h3 class="section-title">Tipo de Transação</h3>
+                <div class="transaction-type-selector">
+                  <button
+                    type="button"
+                    class="type-button income"
+                    [class.selected]="transactionForm.get('type')?.value === 'income'"
+                    (click)="setTransactionType('income')"
+                  >
+                    <mat-icon>trending_up</mat-icon>
+                    <span>Receita</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="type-button expense"
+                    [class.selected]="transactionForm.get('type')?.value === 'expense'"
+                    (click)="setTransactionType('expense')"
+                  >
+                    <mat-icon>trending_down</mat-icon>
+                    <span>Despesa</span>
+                  </button>
+                </div>
+              </div>
 
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Tipo</mat-label>
-                  <mat-select formControlName="type" required>
-                    <mat-option value="income">Receita</mat-option>
-                    <mat-option value="expense">Despesa</mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="transactionForm.get('type')?.hasError('required')">
-                    Tipo é obrigatório
-                  </mat-error>
+              <!-- Informações Básicas -->
+              <div class="form-section">
+                <h3 class="section-title">Informações Básicas</h3>
+                <div class="form-grid">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Título da transação</mat-label>
+                    <input
+                      matInput
+                      formControlName="title"
+                      placeholder="Ex: Compra no supermercado"
+                      required
+                    />
+                    <mat-icon matSuffix>title</mat-icon>
+                    <mat-error *ngIf="transactionForm.get('title')?.hasError('required')">
+                      Título é obrigatório
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline" class="amount-field">
+                    <mat-label>Valor</mat-label>
+                    <span matPrefix>R$&nbsp;</span>
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="amount"
+                      placeholder="0,00"
+                      required
+                    />
+                    <mat-icon matSuffix>attach_money</mat-icon>
+                    <mat-error *ngIf="transactionForm.get('amount')?.hasError('required')">
+                      Valor é obrigatório
+                    </mat-error>
+                    <mat-error *ngIf="transactionForm.get('amount')?.hasError('min')">
+                      Valor deve ser maior que zero
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Categoria e Data -->
+              <div class="form-section">
+                <h3 class="section-title">Categoria e Data</h3>
+                <div class="form-grid">
+                  <div class="category-container">
+                    <mat-form-field appearance="outline" class="category-field">
+                      <mat-label>Categoria</mat-label>
+                      <mat-select formControlName="categoryId" required>
+                        <mat-option *ngFor="let category of categories" [value]="category.id">
+                          {{ category.name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-icon matSuffix>category</mat-icon>
+                      <mat-error *ngIf="transactionForm.get('categoryId')?.hasError('required')">
+                        Categoria é obrigatória
+                      </mat-error>
+                    </mat-form-field>
+
+                    <button
+                      type="button"
+                      mat-fab
+                      color="accent"
+                      (click)="openNewCategoryDialog()"
+                      matTooltip="Adicionar nova categoria"
+                      class="add-category-fab"
+                    >
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </div>
+
+                  <mat-form-field appearance="outline" class="date-field">
+                    <mat-label>Data</mat-label>
+                    <input matInput type="date" formControlName="date" required />
+                    <mat-icon matSuffix>calendar_today</mat-icon>
+                    <mat-error *ngIf="transactionForm.get('date')?.hasError('required')">
+                      Data é obrigatória
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Descrição Opcional -->
+              <div class="form-section">
+                <h3 class="section-title">Descrição (Opcional)</h3>
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Descrição adicional</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="description"
+                    rows="3"
+                    placeholder="Adicione mais detalhes sobre esta transação..."
+                  ></textarea>
+                  <mat-icon matSuffix>description</mat-icon>
                 </mat-form-field>
               </div>
 
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="category-field">
-                  <mat-label>Categoria</mat-label>
-                  <mat-select formControlName="categoryId" required>
-                    <mat-option *ngFor="let category of categories" [value]="category.id">
-                      {{ category.name }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="transactionForm.get('categoryId')?.hasError('required')">
-                    Categoria é obrigatória
-                  </mat-error>
-                </mat-form-field>
-
+              <!-- Botão de Ação -->
+              <div class="form-actions">
                 <button
-                  type="button"
-                  mat-icon-button
+                  mat-raised-button
                   color="primary"
-                  (click)="openNewCategoryDialog()"
-                  matTooltip="Adicionar nova categoria"
-                  class="add-category-btn"
+                  type="submit"
+                  [disabled]="transactionForm.invalid || isLoading"
+                  class="submit-button"
                 >
-                  <mat-icon>add</mat-icon>
+                  <mat-icon *ngIf="isLoading">refresh</mat-icon>
+                  <mat-icon *ngIf="!isLoading">{{
+                    transactionForm.get('type')?.value === 'income' ? 'add_circle' : 'remove_circle'
+                  }}</mat-icon>
+                  {{
+                    isLoading
+                      ? 'Salvando...'
+                      : transactionForm.get('type')?.value === 'income'
+                      ? 'Adicionar Receita'
+                      : 'Adicionar Despesa'
+                  }}
                 </button>
-
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Valor (R$)</mat-label>
-                  <input matInput type="number" formControlName="amount" required />
-                  <mat-error *ngIf="transactionForm.get('amount')?.hasError('required')">
-                    Valor é obrigatório
-                  </mat-error>
-                  <mat-error *ngIf="transactionForm.get('amount')?.hasError('min')">
-                    Valor deve ser maior que zero
-                  </mat-error>
-                </mat-form-field>
               </div>
-
-              <div class="form-row">
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Data</mat-label>
-                  <input matInput type="date" formControlName="date" required />
-                  <mat-error *ngIf="transactionForm.get('date')?.hasError('required')">
-                    Data é obrigatória
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="half-width">
-                  <mat-label>Descrição</mat-label>
-                  <input matInput formControlName="description" />
-                </mat-form-field>
-              </div>
-
-              <button
-                mat-raised-button
-                color="primary"
-                type="submit"
-                [disabled]="transactionForm.invalid || isLoading"
-                class="submit-button"
-              >
-                {{ isLoading ? 'Salvando...' : 'Salvar Transação' }}
-              </button>
             </form>
           </mat-card-content>
         </mat-card>
       </div>
     </mat-tab>
 
-    <mat-tab label="Lista de Transações">
+    <mat-tab label="📋 Histórico">
       <div class="table-container">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Transações</mat-card-title>
+        <mat-card class="modern-card">
+          <mat-card-header class="card-header">
+            <mat-card-title class="card-title">
+              <mat-icon>history</mat-icon>
+              Histórico de Transações
+            </mat-card-title>
+            <mat-card-subtitle>{{ transactions.length }} transações encontradas</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <table mat-table [dataSource]="transactions" class="transactions-table">
-              <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef>Título</th>
-                <td mat-cell *matCellDef="let transaction">{{ transaction.title }}</td>
-              </ng-container>
+            <div class="table-wrapper">
+              <table mat-table [dataSource]="transactions" class="transactions-table">
+                <ng-container matColumnDef="title">
+                  <th mat-header-cell *matHeaderCellDef>Título</th>
+                  <td mat-cell *matCellDef="let transaction">{{ transaction.title }}</td>
+                </ng-container>
 
-              <ng-container matColumnDef="type">
-                <th mat-header-cell *matHeaderCellDef>Tipo</th>
-                <td mat-cell *matCellDef="let transaction">
-                  <mat-chip [color]="transaction.type === 'income' ? 'primary' : 'warn'">
-                    {{ transaction.type === 'income' ? 'Receita' : 'Despesa' }}
-                  </mat-chip>
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef>Tipo</th>
+                  <td mat-cell *matCellDef="let transaction">
+                    <mat-chip [class]="transaction.type === 'income' ? 'income' : 'expense'">
+                      <mat-icon>{{
+                        transaction.type === 'income' ? 'trending_up' : 'trending_down'
+                      }}</mat-icon>
+                      {{ transaction.type === 'income' ? 'Receita' : 'Despesa' }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef>Valor</th>
-                <td mat-cell *matCellDef="let transaction">
-                  <span
-                    [class.income]="transaction.type === 'income'"
-                    [class.expense]="transaction.type === 'expense'"
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef>Valor</th>
+                  <td
+                    mat-cell
+                    *matCellDef="let transaction"
+                    [class]="transaction.type === 'income' ? 'income' : 'expense'"
                   >
                     {{ formatCurrency(transaction.amountInCents) }}
-                  </span>
-                </td>
-              </ng-container>
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef>Data</th>
-                <td mat-cell *matCellDef="let transaction">
-                  {{ formatDate(transaction.date) }}
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="date">
+                  <th mat-header-cell *matHeaderCellDef>Data</th>
+                  <td mat-cell *matCellDef="let transaction">
+                    {{ transaction.date | date : 'dd/MM/yyyy' }}
+                  </td>
+                </ng-container>
 
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Ações</th>
-                <td mat-cell *matCellDef="let transaction">
-                  <button mat-icon-button color="warn" (click)="deleteTransaction(transaction.id)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
+                <ng-container matColumnDef="actions">
+                  <th mat-header-cell *matHeaderCellDef>Ações</th>
+                  <td mat-cell *matCellDef="let transaction">
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="deleteTransaction(transaction.id)"
+                      matTooltip="Excluir"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+              </table>
+            </div>
           </mat-card-content>
         </mat-card>
       </div>
